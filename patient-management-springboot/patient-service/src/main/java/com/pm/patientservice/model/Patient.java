@@ -20,7 +20,7 @@ public class Patient {
     @NotNull
     @Email
     @Column(unique = true)
-    private String Email;
+    private String email;
 
     @NotNull
     private String address;
@@ -49,11 +49,11 @@ public class Patient {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public void setEmail(String Email) {
+        email = Email;
     }
 
     public String getAddress() {
