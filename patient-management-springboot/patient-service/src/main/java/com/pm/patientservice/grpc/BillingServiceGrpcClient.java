@@ -16,9 +16,10 @@ public class BillingServiceGrpcClient {
     private static final Logger log = LoggerFactory.getLogger(BillingServiceGrpcClient.class);
     private final BillingServiceGrpc.BillingServiceBlockingStub blockingStub;
 
-    public BillingServiceGrpcClient(@Value("${billing.service.address.localhost}") String serverAddress,
-                                    @Value("${billing.srevice.grpc.port:9001}") int serverPort) {
+    public BillingServiceGrpcClient(@Value("${BILLING_SERVICE_ADDRESS}") String serverAddress,
+                                    @Value("${BILLING_SERVICE_GRPC_PORT:9001}") int serverPort) {
         log.info("Connecting to Billing service at {}:{}", serverAddress, serverPort);
+        System.out.println("⚠ BillingServiceGrpcClient INIT");
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(serverAddress, serverPort).usePlaintext().build();
 
@@ -26,11 +27,14 @@ public class BillingServiceGrpcClient {
 
     }
 
-    public BillingResponse createBillingAccount( String patientId, String name,
-                                         String email) {
-        BillingRequest request = BillingRequest.newBuilder().setPatientId(patientId).setName(name).setEmail(email).build();
+    public BillingResponse createBillingAccount(String patientId, String name,
+                                                String email) {
+
+        BillingRequest request = BillingRequest.newBuilder().setPatientId(patientId)
+                .setName(name).setEmail(email).build();
+
         BillingResponse response = blockingStub.createBillingAccount(request);
-        log.info("recieved response from billing service via GRPC: {}", response);
+        log.info("Received response from billing service via GRPC: {}", response);
         return response;
     }
 

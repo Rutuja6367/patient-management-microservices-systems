@@ -38,7 +38,9 @@ public class PatientService {
             throw new EmailAlreadyExistsException("A patient with this email," + "already exists!" + patientRequestDTO.getEmail());
         }
         Patient newPatient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
+
         billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(), newPatient.getEmail());
+        System.out.println("called create billing account");
         return PatientMapper.toDTO(newPatient);
 
     }
