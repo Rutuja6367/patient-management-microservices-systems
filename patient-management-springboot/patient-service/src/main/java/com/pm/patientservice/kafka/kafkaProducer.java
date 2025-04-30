@@ -1,6 +1,8 @@
 package com.pm.patientservice.kafka;
 
 import com.pm.patientservice.model.Patient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import patient.events.PatientEvent;
@@ -8,6 +10,7 @@ import patient.events.PatientEvent;
 @Service
 public class kafkaProducer {
 
+    private static final Logger log = LoggerFactory.getLogger(kafkaProducer.class);
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
     public kafkaProducer(KafkaTemplate<String, byte[]> kafkaTemplate) {
@@ -21,5 +24,11 @@ public class kafkaProducer {
                 .setEmail(patient.getEmail())
                 .setEventType("PATIENT_CREATED")
                 .build();
+
+        try {
+            kafkaTemplate.send("patient", event.toByteArray());
+        } catch (Exception e) {
+            log.error("error in sending patient event created : {}", event);
+        }
     }
 }
